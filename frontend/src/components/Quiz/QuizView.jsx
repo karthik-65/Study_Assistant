@@ -37,6 +37,7 @@ export default function QuizView({ documents = [], onReturnToChat }) {
   const [userAnswers, setUserAnswers] = useState({});
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [showExitModal, setShowExitModal] = useState(false);
+  const [showSubmitModal, setShowSubmitModal] = useState(false);
   const setupScrollRef = useRef(null);
 
   const handleDocListWheel = (e) => {
@@ -685,13 +686,29 @@ export default function QuizView({ documents = [], onReturnToChat }) {
             </div>
           )}
 
-          <button
-            className="btn-secondary"
-            onClick={() => setShowExitModal(true)}
-            style={{ padding: '0.4rem 0.9rem', fontSize: '0.8rem' }}
-          >
-            Exit Quiz
-          </button>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+            <button
+              className="btn-primary"
+              onClick={() => setShowSubmitModal(true)}
+              style={{
+                padding: '0.4rem 0.95rem',
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                borderColor: '#10b981'
+              }}
+            >
+              <Check style={{ width: 14, height: 14, marginRight: 4 }} />
+              Submit Quiz
+            </button>
+            <button
+              className="btn-secondary"
+              onClick={() => setShowExitModal(true)}
+              style={{ padding: '0.4rem 0.9rem', fontSize: '0.8rem' }}
+            >
+              Exit Quiz
+            </button>
+          </div>
         </div>
 
         {/* Progress Bar */}
@@ -797,7 +814,7 @@ export default function QuizView({ documents = [], onReturnToChat }) {
               {isLastQuestion ? (
                 <button
                   className="btn-primary"
-                  onClick={() => setQuizState('review')}
+                  onClick={() => setShowSubmitModal(true)}
                   style={{ padding: '0.65rem 1.5rem', fontSize: '0.88rem', fontWeight: 800, background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', borderColor: '#10b981' }}
                 >
                   <span>Submit Quiz</span>
@@ -934,6 +951,170 @@ export default function QuizView({ documents = [], onReturnToChat }) {
                   onMouseLeave={(e) => e.currentTarget.style.opacity = '1'}
                 >
                   Yes, Exit Quiz
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Submit Quiz Confirmation Modal */}
+        {showSubmitModal && (
+          <div
+            onClick={(e) => {
+              if (e.target === e.currentTarget) setShowSubmitModal(false);
+            }}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              background: 'rgba(15, 23, 42, 0.75)',
+              backdropFilter: 'blur(8px)',
+              WebkitBackdropFilter: 'blur(8px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 9999,
+              animation: 'fadeIn 0.2s ease-out'
+            }}
+          >
+            <div style={{
+              background: 'var(--bg-card)',
+              border: '1px solid var(--border-color)',
+              borderRadius: '20px',
+              padding: '2rem',
+              maxWidth: '440px',
+              width: '92%',
+              boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5), 0 0 35px rgba(16, 185, 129, 0.15)',
+              textAlign: 'center',
+              animation: 'scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+              position: 'relative'
+            }}>
+              {/* Icon Badge */}
+              <div style={{
+                width: '60px',
+                height: '60px',
+                borderRadius: '50%',
+                background: totalQ - answeredCount > 0 ? 'rgba(245, 158, 11, 0.12)' : 'rgba(16, 185, 129, 0.12)',
+                border: `1.5px solid ${totalQ - answeredCount > 0 ? 'rgba(245, 158, 11, 0.35)' : 'rgba(16, 185, 129, 0.35)'}`,
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                margin: '0 auto 1.25rem',
+                color: totalQ - answeredCount > 0 ? 'var(--warning)' : 'var(--success)'
+              }}>
+                {totalQ - answeredCount > 0 ? (
+                  <AlertTriangle style={{ width: 30, height: 30 }} />
+                ) : (
+                  <CheckCircle2 style={{ width: 30, height: 30 }} />
+                )}
+              </div>
+
+              <h3 style={{
+                fontSize: '1.3rem',
+                fontWeight: 800,
+                color: 'var(--text-primary)',
+                marginBottom: '0.6rem',
+                fontFamily: "'Outfit', sans-serif"
+              }}>
+                Submit Quiz?
+              </h3>
+
+              <p style={{
+                fontSize: '0.88rem',
+                color: 'var(--text-secondary)',
+                lineHeight: 1.55,
+                marginBottom: '1.5rem'
+              }}>
+                {totalQ - answeredCount > 0
+                  ? `You still have ${totalQ - answeredCount} unanswered ${totalQ - answeredCount === 1 ? 'question' : 'questions'}. Are you sure you want to finish and submit now?`
+                  : `You have completed all ${totalQ} questions! Ready to submit and see your final score and detailed explanations?`
+                }
+              </p>
+
+              {/* Status Breakdown Pills */}
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: '0.65rem',
+                marginBottom: '1.75rem',
+                flexWrap: 'wrap'
+              }}>
+                <div style={{
+                  padding: '6px 14px',
+                  borderRadius: '20px',
+                  background: 'rgba(99, 102, 241, 0.1)',
+                  border: '1px solid rgba(99, 102, 241, 0.25)',
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  color: 'var(--accent-primary)'
+                }}>
+                  Total: {totalQ}
+                </div>
+                <div style={{
+                  padding: '6px 14px',
+                  borderRadius: '20px',
+                  background: 'rgba(16, 185, 129, 0.1)',
+                  border: '1px solid rgba(16, 185, 129, 0.25)',
+                  fontSize: '0.8rem',
+                  fontWeight: 700,
+                  color: 'var(--success)'
+                }}>
+                  Answered: {answeredCount}
+                </div>
+                {totalQ - answeredCount > 0 && (
+                  <div style={{
+                    padding: '6px 14px',
+                    borderRadius: '20px',
+                    background: 'rgba(245, 158, 11, 0.1)',
+                    border: '1px solid rgba(245, 158, 11, 0.25)',
+                    fontSize: '0.8rem',
+                    fontWeight: 700,
+                    color: 'var(--warning)'
+                  }}>
+                    Unanswered: {totalQ - answeredCount}
+                  </div>
+                )}
+              </div>
+
+              {/* Action Buttons */}
+              <div style={{
+                display: 'flex',
+                gap: '0.75rem',
+                justifyContent: 'center'
+              }}>
+                <button
+                  className="btn-secondary"
+                  onClick={() => setShowSubmitModal(false)}
+                  style={{
+                    flex: 1,
+                    padding: '0.7rem 1rem',
+                    fontSize: '0.88rem',
+                    fontWeight: 700,
+                    borderRadius: '12px'
+                  }}
+                >
+                  Keep Reviewing
+                </button>
+                <button
+                  className="btn-primary"
+                  onClick={() => {
+                    setShowSubmitModal(false);
+                    setQuizState('review');
+                  }}
+                  style={{
+                    flex: 1,
+                    padding: '0.7rem 1rem',
+                    fontSize: '0.88rem',
+                    fontWeight: 800,
+                    background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
+                    borderColor: '#10b981',
+                    borderRadius: '12px'
+                  }}
+                >
+                  Confirm & Submit
                 </button>
               </div>
             </div>

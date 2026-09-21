@@ -352,6 +352,8 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, initialMode 
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="Enter your password"
+                      autoComplete="current-password"
+                      spellCheck="false"
                       required
                       style={{
                         background: 'transparent',
@@ -469,6 +471,8 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, initialMode 
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       placeholder="At least 6 characters"
+                      autoComplete="new-password"
+                      spellCheck="false"
                       required
                       style={{
                         background: 'transparent',
@@ -516,6 +520,8 @@ export default function AuthModal({ isOpen, onClose, onAuthSuccess, initialMode 
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       placeholder="Repeat your password"
+                      autoComplete="new-password"
+                      spellCheck="false"
                       required
                       style={{
                         background: 'transparent',
