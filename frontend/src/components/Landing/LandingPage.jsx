@@ -696,6 +696,31 @@ export default function LandingPage({ onOpenAuthModal }) {
             gap: '1rem'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                filter: 'drop-shadow(0 2px 8px rgba(99, 102, 241, 0.35))'
+              }}>
+                <svg width="24" height="24" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="saClassyGradFooter" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#4F46E5" />
+                      <stop offset="0.5" stopColor="#6366F1" />
+                      <stop offset="1" stopColor="#2563EB" />
+                    </linearGradient>
+                    <linearGradient id="saSparkGoldGradFooter" x1="14" y1="6" x2="22" y2="18" gradientUnits="userSpaceOnUse">
+                      <stop stopColor="#FDE047" />
+                      <stop offset="1" stopColor="#F59E0B" />
+                    </linearGradient>
+                  </defs>
+                  <rect width="36" height="36" rx="10" fill="url(#saClassyGradFooter)" />
+                  <rect x="0.5" y="0.5" width="35" height="35" rx="9.5" stroke="rgba(255,255,255,0.25)" />
+                  <path d="M8 25C11 23.5 14.5 23.5 17 25.2V13C14.5 11.2 11 11.2 8 12.5V25Z" fill="#ffffff" fillOpacity="0.95" />
+                  <path d="M28 25C25 23.5 21.5 23.5 19 25.2V13C21.5 11.2 25 11.2 28 12.5V25Z" fill="#ffffff" fillOpacity="0.95" />
+                  <path d="M18 5L19.4 9.6L24 11L19.4 12.4L18 17L16.6 12.4L12 11L16.6 9.6L18 5Z" fill="url(#saSparkGoldGradFooter)" />
+                </svg>
+              </div>
               <span style={{ fontWeight: 800, color: 'var(--text-primary)', fontFamily: "'Outfit', sans-serif" }}>StudyAssist</span>
               <span>— Intelligent Academic Companion</span>
             </div>
