@@ -1,0 +1,18 @@
+<svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="saClassyGrad" x1="0" y1="0" x2="36" y2="36" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4F46E5" />
+      <stop offset="0.5" stop-color="#6366F1" />
+      <stop offset="1" stop-color="#2563EB" />
+    </linearGradient>
+    <linearGradient id="saSparkGoldGrad" x1="14" y1="6" x2="22" y2="18" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FDE047" />
+      <stop offset="1" stop-color="#F59E0B" />
+    </linearGradient>
+  </defs>
+  <rect width="36" height="36" rx="10" fill="url(#saClassyGrad)" />
+  <rect x="0.5" y="0.5" width="35" height="35" rx="9.5" stroke="rgba(255,255,255,0.25)" />
+  <path d="M8 25C11 23.5 14.5 23.5 17 25.2V13C14.5 11.2 11 11.2 8 12.5V25Z" fill="#ffffff" fill-opacity="0.95" />
+  <path d="M28 25C25 23.5 21.5 23.5 19 25.2V13C21.5 11.2 25 11.2 28 12.5V25Z" fill="#ffffff" fill-opacity="0.95" />
+  <path d="M18 5L19.4 9.6L24 11L19.4 12.4L18 17L16.6 12.4L12 11L16.6 9.6L18 5Z" fill="url(#saSparkGoldGrad)" />
+</svg>
