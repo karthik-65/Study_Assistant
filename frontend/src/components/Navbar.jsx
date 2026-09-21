@@ -8,7 +8,8 @@ export default function Navbar({
   setActiveView,
   currentUser,
   onOpenAuthModal,
-  onLogout
+  onLogout,
+  onReturnToHome
 }) {
   const [isNavIconHovered, setIsNavIconHovered] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -49,7 +50,10 @@ export default function Navbar({
     }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
         <div
-          onClick={() => setActiveView && setActiveView('chat')}
+          onClick={() => {
+            if (onReturnToHome) onReturnToHome();
+            if (setActiveView) setActiveView('chat');
+          }}
           style={{
             display: 'flex',
             alignItems: 'center',

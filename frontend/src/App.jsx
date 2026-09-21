@@ -5,6 +5,7 @@ import ChatView from './components/Chat/ChatView';
 import DocumentSidebar from './components/Documents/DocumentSidebar';
 import QuizView from './components/Quiz/QuizView';
 import AuthModal from './components/Auth/AuthModal';
+import LandingPage from './components/Landing/LandingPage';
 import {
   fetchChatHistory,
   saveChatMessage,
@@ -30,6 +31,7 @@ export default function App() {
 
   // Auth States
   const [currentUser, setCurrentUser] = useState(() => getStoredUser());
+  const [isGuestMode, setIsGuestMode] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState('login'); // 'login' | 'register'
 
@@ -184,6 +186,7 @@ export default function App() {
   const handleLogout = () => {
     clearAuth();
     setCurrentUser(null);
+    setIsGuestMode(false);
     setActiveView('chat');
     setActiveDoc(null);
     setFileChats({});
@@ -191,6 +194,7 @@ export default function App() {
 
   const handleAuthSuccess = (user) => {
     setCurrentUser(user);
+    setIsGuestMode(false);
     setActiveView('chat');
     setActiveDoc(null);
     setIsAuthModalOpen(false);
@@ -219,10 +223,16 @@ export default function App() {
         currentUser={currentUser}
         onOpenAuthModal={handleOpenAuthModal}
         onLogout={handleLogout}
+        onReturnToHome={() => setIsGuestMode(false)}
       />
 
-      {/* 2. Main Body View: Home is the Chat page, or QuizView when activeView === 'quiz' */}
-      {activeView === 'quiz' ? (
+      {/* 2. Main Body View: Welcome Landing Page if not logged in (and not in guest mode), or Study Workspace */}
+      {(!currentUser && !isGuestMode) ? (
+        <LandingPage
+          onOpenAuthModal={handleOpenAuthModal}
+          onContinueAsGuest={() => setIsGuestMode(true)}
+        />
+      ) : activeView === 'quiz' ? (
         <div style={{ flex: 1, width: '100%', overflow: 'hidden' }}>
           <QuizView
             documents={uploadedDocs}
