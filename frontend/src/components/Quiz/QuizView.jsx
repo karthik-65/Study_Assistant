@@ -687,11 +687,36 @@ export default function QuizView({ documents = [], onReturnToChat }) {
           )}
 
           <button
-            className="btn-secondary"
             onClick={() => setShowExitModal(true)}
-            style={{ padding: '0.4rem 0.9rem', fontSize: '0.8rem' }}
+            style={{
+              padding: '0.45rem 1rem',
+              fontSize: '0.82rem',
+              fontWeight: 700,
+              color: '#ef4444',
+              background: 'rgba(239, 68, 68, 0.08)',
+              border: '1.5px solid rgba(239, 68, 68, 0.35)',
+              borderRadius: '20px',
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              transition: 'all 0.2s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.background = '#ef4444';
+              e.currentTarget.style.color = '#ffffff';
+              e.currentTarget.style.borderColor = '#ef4444';
+              e.currentTarget.style.boxShadow = '0 4px 14px rgba(239, 68, 68, 0.4)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.background = 'rgba(239, 68, 68, 0.08)';
+              e.currentTarget.style.color = '#ef4444';
+              e.currentTarget.style.borderColor = 'rgba(239, 68, 68, 0.35)';
+              e.currentTarget.style.boxShadow = 'none';
+            }}
           >
-            Exit Quiz
+            <X style={{ width: 14, height: 14 }} />
+            <span>Exit Quiz</span>
           </button>
         </div>
 
