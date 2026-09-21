@@ -104,6 +104,49 @@ An intelligent, interactive AI Study Assistant built with **FastAPI**, **LangCha
 
 ---
 
+## 🐳 Docker & AWS Cloud Deployment
+
+Deploy the full stack with **Docker Compose** on an **AWS EC2 (Ubuntu)** instance connecting to **AWS RDS (MySQL)**:
+
+```
+                         USERS
+                           │
+                           │ HTTPS (443)
+                           ▼
+                    ┌─────────────┐
+                    │   AWS EC2   │
+                    │   Ubuntu    │
+                    └──────┬──────┘
+                           │
+                         Docker
+                           │
+                  ┌────────┴────────┐
+                  │                 │
+                  ▼                 ▼
+            React + Nginx       FastAPI
+              Container        Container
+              (Port 80)        (Port 8000)
+                                    │
+                                    │ MySQL (Port 3306)
+                                    ▼
+                              ┌───────────┐
+                              │ AWS RDS   │
+                              │   MySQL   │
+                              └───────────┘
+```
+
+### Quick Run with Docker Compose:
+1. Ensure your `backend/.env` is configured (see `backend/.env.example`).
+2. Build and launch containers:
+   ```bash
+   docker compose up -d --build
+   ```
+3. Access your application at `http://localhost` (or your EC2 IP).
+
+👉 **For complete step-by-step instructions on AWS EC2, AWS RDS MySQL, and SSL/HTTPS setup, see [DEPLOYMENT_AWS.md](DEPLOYMENT_AWS.md).**
+
+---
+
 ## 📂 Project Structure
 
 ```
