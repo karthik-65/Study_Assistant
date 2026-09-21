@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { FileText, Sparkles, Trash2, Search, UploadCloud, X } from 'lucide-react';
+import { FileText, Sparkles, Trash2, Search, UploadCloud, X, Eye } from 'lucide-react';
 import { fetchDocuments, fetchChunks, deleteDocument, uploadDocument } from '../../services/api';
 
 export default function DocumentSidebar({
