@@ -10,7 +10,12 @@ import {
   FileText,
   BookOpen,
   Brain,
-  X
+  X,
+  Home,
+  Search,
+  Check,
+  Sliders,
+  AlertTriangle
 } from 'lucide-react';
 import { generateQuizAPI, fetchDocuments } from '../../services/api';
 

@@ -7,7 +7,11 @@ import {
   X,
   Plus,
   Mic,
-  MicOff
+  MicOff,
+  User,
+  Bot,
+  FileText,
+  BookOpen
 } from 'lucide-react';
 import katex from 'katex';
 import { askBackendRAG, uploadDocument } from '../../services/api';
