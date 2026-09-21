@@ -172,7 +172,7 @@ export default function ChatView({
   const renderFormattedMarkdown = (content) => {
     if (!content) return null;
 
-    const parts = content.split(/(\$\$[\s\S]*?\$\$|\$[^\$\n]+\$)/g);
+    const parts = content.split(/(\$\$[\s\S]*?\$\$|\$[^$\n]+\$)/g);
 
     return parts.map((part, idx) => {
       if (part.startsWith('$$') && part.endsWith('$$')) {
@@ -283,10 +283,40 @@ export default function ChatView({
         background: 'var(--bg-secondary)',
         border: '2px solid var(--accent-primary)',
         borderRadius: '36px',
-        padding: '0.45rem 0.65rem 0.45rem 1.25rem',
+        padding: '0.45rem 0.65rem 0.45rem 0.85rem',
         boxShadow: '0 8px 25px rgba(99, 102, 241, 0.35), 0 0 20px rgba(99, 102, 241, 0.25)',
         transition: 'all 0.2s ease-in-out'
       }}>
+        {/* Hidden File Input for uploading attachments */}
+        <input
+          type="file"
+          ref={fileInputRef}
+          onChange={handleFileUpload}
+          style={{ display: 'none' }}
+          accept=".pdf,.docx,.txt"
+        />
+        <button
+          onClick={() => fileInputRef.current && fileInputRef.current.click()}
+          title="Upload Document (.pdf, .docx, .txt)"
+          disabled={isUploading}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            color: 'var(--accent-primary)',
+            cursor: isUploading ? 'not-allowed' : 'pointer',
+            padding: '4px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            borderRadius: '50%',
+            opacity: isUploading ? 0.5 : 1,
+            transition: 'transform 0.15s ease'
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.1)'}
+          onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+        >
+          <Plus style={{ width: 18, height: 18 }} />
+        </button>
 
         <input
           type="text"
@@ -407,15 +437,38 @@ export default function ChatView({
           padding: '0.6rem 1.5rem',
           display: 'flex',
           alignItems: 'center',
-          gap: '0.55rem',
+          justifyContent: 'space-between',
           fontSize: '0.85rem',
           flexShrink: 0
         }}>
-          <FileText style={{ width: 17, height: 17, color: 'var(--accent-primary)' }} />
-          <strong style={{ color: 'var(--text-primary)', fontSize: '0.92rem' }}>{activeDoc.title}</strong>
-          <span className="badge badge-success" style={{ fontSize: '0.7rem', marginLeft: '0.25rem' }}>
-            {activeDoc.totalPages || 1} Pages • {activeDoc.chunks_count || 4} Chunks
-          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.55rem' }}>
+            <FileText style={{ width: 17, height: 17, color: 'var(--accent-primary)' }} />
+            <strong style={{ color: 'var(--text-primary)', fontSize: '0.92rem' }}>{activeDoc.title}</strong>
+            <span className="badge badge-success" style={{ fontSize: '0.7rem', marginLeft: '0.25rem' }}>
+              {activeDoc.totalPages || 1} Pages • {activeDoc.chunks_count || 4} Chunks
+            </span>
+          </div>
+          {onClearActiveDoc && (
+            <button
+              onClick={onClearActiveDoc}
+              title="Close document chat"
+              style={{
+                background: 'transparent',
+                border: 'none',
+                cursor: 'pointer',
+                color: 'var(--text-muted)',
+                display: 'flex',
+                alignItems: 'center',
+                padding: '4px',
+                borderRadius: '4px',
+                transition: 'color 0.2s'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.color = 'var(--text-primary)'}
+              onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
+            >
+              <X style={{ width: 16, height: 16 }} />
+            </button>
+          )}
         </div>
       )}
 

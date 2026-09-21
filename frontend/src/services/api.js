@@ -18,6 +18,8 @@ export function setAuthToken(token) {
 
 export function getStoredUser() {
   try {
+    const token = getAuthToken();
+    if (!token) return null;
     const data = localStorage.getItem(USER_KEY);
     return data ? JSON.parse(data) : null;
   } catch {
@@ -50,54 +52,58 @@ function getAuthHeaders(additionalHeaders = {}) {
 // ----------------- Auth API Endpoints -----------------
 
 export async function registerUser({ username, email, password }) {
-  try {
-    const res = await fetch(`${API_BASE_URL}/auth/register`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username, email, password })
-    });
-    const data = await res.json();
-    if (!res.ok) {
-      throw new Error(data.detail || 'Registration failed');
-    }
-    if (data.token) {
-      setAuthToken(data.token);
-      setStoredUser(data.user);
-    }
-    return data;
-  } catch (err) {
-    throw err;
+  const res = await fetch(`${API_BASE_URL}/auth/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ username, email, password })
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.detail || 'Registration failed');
   }
+  if (data.token) {
+    setAuthToken(data.token);
+    setStoredUser(data.user);
+  }
+  return data;
 }
 
 export async function loginUser({ identifier, password }) {
-  try {
-    const res = await fetch(`${API_BASE_URL}/auth/login`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ identifier, password })
-    });
-    const data = await res.json();
-    if (!res.ok) {
-      throw new Error(data.detail || 'Login failed');
-    }
-    if (data.token) {
-      setAuthToken(data.token);
-      setStoredUser(data.user);
-    }
-    return data;
-  } catch (err) {
-    throw err;
+  const res = await fetch(`${API_BASE_URL}/auth/login`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ identifier, password })
+  });
+  const data = await res.json();
+  if (!res.ok) {
+    throw new Error(data.detail || 'Login failed');
   }
+  if (data.token) {
+    setAuthToken(data.token);
+    setStoredUser(data.user);
+  }
+  return data;
+}
+
+export function checkAuthResponse(res) {
+  if (res && res.status === 401) {
+    clearAuth();
+    window.dispatchEvent(new Event('study_assistant_session_expired'));
+  }
+  return res;
 }
 
 export async function fetchCurrentUser() {
   const token = getAuthToken();
-  if (!token) return null;
+  if (!token) {
+    clearAuth();
+    return null;
+  }
   try {
     const res = await fetch(`${API_BASE_URL}/auth/me`, {
       headers: getAuthHeaders()
     });
+    checkAuthResponse(res);
     if (!res.ok) {
       clearAuth();
       return null;
@@ -121,6 +127,8 @@ export async function fetchDocuments() {
     const res = await fetch(`${API_BASE_URL}/documents`, {
       headers: getAuthHeaders()
     });
+    checkAuthResponse(res);
+    if (!res.ok) return [];
     const data = await res.json();
     return data.documents || [];
   } catch (err) {
@@ -135,6 +143,7 @@ export async function deleteDocument(filename) {
       method: 'DELETE',
       headers: getAuthHeaders()
     });
+    checkAuthResponse(res);
     return await res.json();
   } catch (err) {
     console.error("Delete document error:", err);
@@ -152,6 +161,7 @@ export async function uploadDocument(file, subject = 'General') {
     headers: getAuthHeaders(),
     body: formData
   });
+  checkAuthResponse(res);
   return await res.json();
 }
 
@@ -168,6 +178,7 @@ export async function askBackendRAG({ query, subjectFilter = 'all', filenameFilt
       chat_history: chatHistory
     })
   });
+  checkAuthResponse(res);
   return await res.json();
 }
 
@@ -176,6 +187,8 @@ export async function fetchChunks(filename) {
     const res = await fetch(`${API_BASE_URL}/chunks?filename=${encodeURIComponent(filename)}`, {
       headers: getAuthHeaders()
     });
+    checkAuthResponse(res);
+    if (!res.ok) return [];
     const data = await res.json();
     return data.chunks || [];
   } catch (err) {
@@ -189,6 +202,8 @@ export async function fetchChatHistory(docKey = 'all') {
     const res = await fetch(`${API_BASE_URL}/history?doc_key=${encodeURIComponent(docKey)}`, {
       headers: getAuthHeaders()
     });
+    checkAuthResponse(res);
+    if (!res.ok) return [];
     const data = await res.json();
     return data.messages || [];
   } catch (err) {
@@ -199,7 +214,7 @@ export async function fetchChatHistory(docKey = 'all') {
 
 export async function saveChatMessage(docKey, message) {
   try {
-    await fetch(`${API_BASE_URL}/history`, {
+    const res = await fetch(`${API_BASE_URL}/history`, {
       method: 'POST',
       headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify({
@@ -212,6 +227,7 @@ export async function saveChatMessage(docKey, message) {
         fileData: message.fileData || null
       })
     });
+    checkAuthResponse(res);
   } catch (err) {
     console.error("Save history error:", err);
   }
@@ -219,11 +235,12 @@ export async function saveChatMessage(docKey, message) {
 
 export async function clearChatHistory(docKey = 'all') {
   try {
-    await fetch(`${API_BASE_URL}/history/clear`, {
+    const res = await fetch(`${API_BASE_URL}/history/clear`, {
       method: 'POST',
       headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify({ doc_key: docKey })
     });
+    checkAuthResponse(res);
   } catch (err) {
     console.error("Clear history error:", err);
   }
@@ -234,6 +251,8 @@ export async function fetchOpenChatSessions() {
     const res = await fetch(`${API_BASE_URL}/open_chats`, {
       headers: getAuthHeaders()
     });
+    checkAuthResponse(res);
+    if (!res.ok) return [];
     const data = await res.json();
     return data.sessions || [];
   } catch (err) {
@@ -244,11 +263,12 @@ export async function fetchOpenChatSessions() {
 
 export async function saveOpenChatSession(sessionId, title) {
   try {
-    await fetch(`${API_BASE_URL}/open_chats`, {
+    const res = await fetch(`${API_BASE_URL}/open_chats`, {
       method: 'POST',
       headers: getAuthHeaders({ 'Content-Type': 'application/json' }),
       body: JSON.stringify({ session_id: sessionId, title })
     });
+    checkAuthResponse(res);
   } catch (err) {
     console.error("Save open chat error:", err);
   }
@@ -256,10 +276,11 @@ export async function saveOpenChatSession(sessionId, title) {
 
 export async function deleteOpenChatSession(sessionId) {
   try {
-    await fetch(`${API_BASE_URL}/open_chats/${encodeURIComponent(sessionId)}`, {
+    const res = await fetch(`${API_BASE_URL}/open_chats/${encodeURIComponent(sessionId)}`, {
       method: 'DELETE',
       headers: getAuthHeaders()
     });
+    checkAuthResponse(res);
   } catch (err) {
     console.error("Delete open chat error:", err);
   }
@@ -276,6 +297,7 @@ export async function generateQuizAPI({ filename, numQuestions = 10, difficulty 
         difficulty
       })
     });
+    checkAuthResponse(res);
     return await res.json();
   } catch (err) {
     console.error("Generate quiz error:", err);

@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import {
-  HelpCircle,
   Sparkles,
   Clock,
   CheckCircle2,
@@ -9,7 +8,6 @@ import {
   ArrowLeft,
   RotateCcw,
   FileText,
-  Award,
   BookOpen,
   Brain,
   X
@@ -33,7 +31,6 @@ export default function QuizView({ documents = [], onReturnToChat }) {
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [userAnswers, setUserAnswers] = useState({});
   const [timeRemaining, setTimeRemaining] = useState(0);
-  const [confirmSubmitModal, setConfirmSubmitModal] = useState(false);
   const [showExitModal, setShowExitModal] = useState(false);
   const setupScrollRef = useRef(null);
 

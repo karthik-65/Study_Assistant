@@ -31,7 +31,6 @@ export default function App() {
 
   // Auth States
   const [currentUser, setCurrentUser] = useState(() => getStoredUser());
-  const [isGuestMode, setIsGuestMode] = useState(false);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   const [authModalMode, setAuthModalMode] = useState('login'); // 'login' | 'register'
 
@@ -44,6 +43,25 @@ export default function App() {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('study_assistant_theme', theme);
   }, [theme]);
+
+  // Handle session expiration across the application
+  useEffect(() => {
+    const handleSessionExpired = () => {
+      clearAuth();
+      setCurrentUser(null);
+      setActiveDoc(null);
+      setFileChats({});
+      setOpenChatSessions([]);
+      setUploadedDocs([]);
+      // Open login modal so user is immediately prompted to log back in
+      handleOpenAuthModal('login');
+    };
+
+    window.addEventListener('study_assistant_session_expired', handleSessionExpired);
+    return () => {
+      window.removeEventListener('study_assistant_session_expired', handleSessionExpired);
+    };
+  }, []);
 
   // Verify authentication on mount
   useEffect(() => {
@@ -59,27 +77,35 @@ export default function App() {
     verifyAuth();
   }, []);
 
-  // Load Open Chat sessions & documents list
+  // Load Open Chat sessions & documents list (only when logged in)
   const loadOpenChatSessions = async () => {
+    if (!getStoredUser()) return;
     const sessions = await fetchOpenChatSessions();
     setOpenChatSessions(sessions);
   };
 
   const loadDocuments = async () => {
+    if (!getStoredUser()) return;
     const docs = await fetchDocuments();
     setUploadedDocs(docs);
   };
 
   useEffect(() => {
-    loadOpenChatSessions();
-    loadDocuments();
+    if (currentUser) {
+      loadOpenChatSessions();
+      loadDocuments();
+    } else {
+      setOpenChatSessions([]);
+      setUploadedDocs([]);
+    }
   }, [currentUser]);
 
   const currentDocKey = activeDoc ? (activeDoc.title || activeDoc.doc_id) : activeOpenChatId;
 
-  // Load chat history from Database when currentDocKey changes
+  // Load chat history from Database when currentDocKey changes (only when logged in)
   useEffect(() => {
     async function loadHistory() {
+      if (!currentUser) return;
       const history = await fetchChatHistory(currentDocKey);
       setFileChats(prev => ({
         ...prev,
@@ -186,15 +212,15 @@ export default function App() {
   const handleLogout = () => {
     clearAuth();
     setCurrentUser(null);
-    setIsGuestMode(false);
     setActiveView('chat');
     setActiveDoc(null);
     setFileChats({});
+    setOpenChatSessions([]);
+    setUploadedDocs([]);
   };
 
   const handleAuthSuccess = (user) => {
     setCurrentUser(user);
-    setIsGuestMode(false);
     setActiveView('chat');
     setActiveDoc(null);
     setIsAuthModalOpen(false);
@@ -223,14 +249,12 @@ export default function App() {
         currentUser={currentUser}
         onOpenAuthModal={handleOpenAuthModal}
         onLogout={handleLogout}
-        onReturnToHome={() => setIsGuestMode(false)}
       />
 
-      {/* 2. Main Body View: Welcome Landing Page if not logged in (and not in guest mode), or Study Workspace */}
-      {(!currentUser && !isGuestMode) ? (
+      {/* 2. Main Body View: Welcome Landing Page if not logged in, or Study Workspace if logged in */}
+      {!currentUser ? (
         <LandingPage
           onOpenAuthModal={handleOpenAuthModal}
-          onContinueAsGuest={() => setIsGuestMode(true)}
         />
       ) : activeView === 'quiz' ? (
         <div style={{ flex: 1, width: '100%', overflow: 'hidden' }}>

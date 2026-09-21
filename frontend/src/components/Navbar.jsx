@@ -8,8 +8,7 @@ export default function Navbar({
   setActiveView,
   currentUser,
   onOpenAuthModal,
-  onLogout,
-  onReturnToHome
+  onLogout
 }) {
   const [isNavIconHovered, setIsNavIconHovered] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
@@ -51,7 +50,6 @@ export default function Navbar({
       <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
         <div
           onClick={() => {
-            if (onReturnToHome) onReturnToHome();
             if (setActiveView) setActiveView('chat');
           }}
           style={{
@@ -117,8 +115,8 @@ export default function Navbar({
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-        {/* Dynamic View Toggle Button (Quiz / Chat Icon) */}
-        {setActiveView && (
+        {/* Dynamic View Toggle Button (Quiz / Chat Icon) - Only visible when logged in */}
+        {currentUser && setActiveView && (
           <button
             className="btn-icon"
             onClick={() => setActiveView(activeView === 'quiz' ? 'chat' : 'quiz')}

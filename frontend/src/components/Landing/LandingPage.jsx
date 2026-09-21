@@ -3,20 +3,16 @@ import {
   Brain,
   FileText,
   Sparkles,
-  HelpCircle,
-  Clock,
-  CheckCircle2,
   ArrowRight,
   ShieldCheck,
   Zap,
   BookOpen,
-  Search,
   MessageSquare,
   Layers,
   GraduationCap
 } from 'lucide-react';
 
-export default function LandingPage({ onOpenAuthModal, onContinueAsGuest }) {
+export default function LandingPage({ onOpenAuthModal }) {
   const handleOpenLogin = () => {
     if (onOpenAuthModal) onOpenAuthModal('login');
   };
@@ -191,38 +187,6 @@ export default function LandingPage({ onOpenAuthModal, onContinueAsGuest }) {
             >
               <span>Create Account</span>
             </button>
-
-            {onContinueAsGuest && (
-              <button
-                onClick={onContinueAsGuest}
-                style={{
-                  padding: '0.85rem 1.75rem',
-                  borderRadius: '12px',
-                  fontSize: '1rem',
-                  fontWeight: 700,
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  cursor: 'pointer',
-                  background: 'rgba(99, 102, 241, 0.12)',
-                  color: 'var(--accent-primary)',
-                  border: '1px solid rgba(99, 102, 241, 0.35)',
-                  transition: 'all 0.2s ease',
-                  backdropFilter: 'blur(8px)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = 'var(--accent-primary)';
-                  e.currentTarget.style.background = 'rgba(99, 102, 241, 0.22)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = 'rgba(99, 102, 241, 0.35)';
-                  e.currentTarget.style.background = 'rgba(99, 102, 241, 0.12)';
-                }}
-              >
-                <span>Try as Guest</span>
-                <ArrowRight style={{ width: 16, height: 16 }} />
-              </button>
-            )}
 
             <button
               onClick={scrollToFeatures}
