@@ -686,29 +686,13 @@ export default function QuizView({ documents = [], onReturnToChat }) {
             </div>
           )}
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-            <button
-              className="btn-primary"
-              onClick={() => setShowSubmitModal(true)}
-              style={{
-                padding: '0.4rem 0.95rem',
-                fontSize: '0.8rem',
-                fontWeight: 700,
-                background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)',
-                borderColor: '#10b981'
-              }}
-            >
-              <Check style={{ width: 14, height: 14, marginRight: 4 }} />
-              Submit Quiz
-            </button>
-            <button
-              className="btn-secondary"
-              onClick={() => setShowExitModal(true)}
-              style={{ padding: '0.4rem 0.9rem', fontSize: '0.8rem' }}
-            >
-              Exit Quiz
-            </button>
-          </div>
+          <button
+            className="btn-secondary"
+            onClick={() => setShowExitModal(true)}
+            style={{ padding: '0.4rem 0.9rem', fontSize: '0.8rem' }}
+          >
+            Exit Quiz
+          </button>
         </div>
 
         {/* Progress Bar */}
