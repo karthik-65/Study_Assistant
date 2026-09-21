@@ -1,7 +1,6 @@
 # Environment Variables and Secrets (Keep private!)
 .env
 .env.*
-!.env.example
 *.local
 
 # Python artifacts

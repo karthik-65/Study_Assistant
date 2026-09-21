@@ -143,7 +143,6 @@ This guide walks you through deploying the **AI Study Assistant** using the foll
 
 2. Create and configure `backend/.env`:
    ```bash
-   cp backend/.env.example backend/.env
    nano backend/.env
    ```
 

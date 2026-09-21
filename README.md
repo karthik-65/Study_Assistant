@@ -67,9 +67,9 @@ An intelligent, interactive AI Study Assistant built with **FastAPI**, **LangCha
    ```
 
 4. Configure environment variables:
-   Copy `.env.example` to `.env`:
+   Create or edit `backend/.env`:
    ```bash
-   cp .env.example .env
+   nano .env
    ```
    Fill in your configuration:
    - `GEMINI_API_KEY`: Your Gemini API key from [Google AI Studio](https://aistudio.google.com/app/apikey).
@@ -136,7 +136,7 @@ Deploy the full stack with **Docker Compose** on an **AWS EC2 (Ubuntu)** instanc
 ```
 
 ### Quick Run with Docker Compose:
-1. Ensure your `backend/.env` is configured (see `backend/.env.example`).
+1. Ensure your `backend/.env` is configured.
 2. Build and launch containers:
    ```bash
    docker compose up -d --build
@@ -158,7 +158,6 @@ Study Assistant/
 │   │   ├── main.py          # FastAPI application & endpoints
 │   │   ├── pdf_processor.py # PDF extraction & document chunking
 │   │   └── rag_service.py   # LangChain RAG & Gemini quiz generation
-│   ├── .env.example         # Example environment variables
 │   ├── requirements.txt     # Python backend dependencies
 │   └── run.py               # Backend entry point
 ├── frontend/
