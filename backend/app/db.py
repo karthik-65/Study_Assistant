@@ -8,8 +8,7 @@ load_dotenv()
 
 # MySQL Database Configuration
 MYSQL_HOST = os.getenv("MYSQL_HOST", "localhost")
-# If running inside a Docker container and target host is localhost, resolve to host machine
-if MYSQL_HOST in ("localhost", "127.0.0.1") and (os.path.exists("/.dockerenv") or os.getenv("RUNNING_IN_DOCKER")):
+if (not MYSQL_HOST or MYSQL_HOST in ("localhost", "127.0.0.1")) and (os.path.exists("/.dockerenv") or os.getenv("RUNNING_IN_DOCKER")):
     MYSQL_HOST = "host.docker.internal"
 
 MYSQL_PORT = int(os.getenv("MYSQL_PORT", 3306))

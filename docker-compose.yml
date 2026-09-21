@@ -10,14 +10,7 @@ services:
     env_file:
       - ./backend/.env
     environment:
-      - MYSQL_HOST=${MYSQL_HOST}
-      - MYSQL_PORT=${MYSQL_PORT:-3306}
-      - MYSQL_USER=${MYSQL_USER}
-      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_DATABASE=${MYSQL_DATABASE:-study_assistant}
-      - GEMINI_API_KEY=${GEMINI_API_KEY}
-      - GEMINI_MODEL=${GEMINI_MODEL:-gemini-2.5-flash}
-      - JWT_SECRET=${JWT_SECRET}
+      - RUNNING_IN_DOCKER=1
     extra_hosts:
       - "host.docker.internal:host-gateway"
     networks:
